@@ -1,6 +1,6 @@
 package projekt_mpr.domain;
 
-public class Fertilizer {
+public class Fertilizer implements IHaveId {
 	private int id;
 	private String manufacturer;
 	private String name;

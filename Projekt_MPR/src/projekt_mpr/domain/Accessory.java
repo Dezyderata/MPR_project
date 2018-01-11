@@ -1,6 +1,6 @@
 package projekt_mpr.domain;
 
-public class Accessory {
+public class Accessory implements IHaveId {
 	private int id;
 	private String name;
 	private float price;

@@ -1,6 +1,6 @@
 package projekt_mpr.domain;
 
-public class Flower {
+public class Flower implements IHaveId{
 	private int id;
 	private String name;
 	private String latinName;
