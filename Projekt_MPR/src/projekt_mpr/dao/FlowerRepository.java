@@ -4,12 +4,13 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import projekt_mpr.dao.mappers.ResultSetMapper;
+import projekt_mpr.dao.uow.UnitOfWork;
 import projekt_mpr.domain.Flower;
 
 public class FlowerRepository extends RepositoryBase<Flower> {
 
-	public FlowerRepository(Connection connection, ResultSetMapper<Flower> mapper) throws SQLException {
-		super(connection, mapper);
+	public FlowerRepository(Connection connection, ResultSetMapper<Flower> mapper, UnitOfWork uow) throws SQLException {
+		super(connection, mapper, uow);
 	}
 	@Override
 	protected String createTableSql() {
@@ -30,7 +31,7 @@ public class FlowerRepository extends RepositoryBase<Flower> {
 	}
 	@Override
 	protected String updateSql() {
-		return "UPDATE flowers SET (name, latinName, price) = (?,?,?) WHERE id=?";
+		return "UPDATE flowers SET name=?, latinName=?, price=? WHERE id=?";
 	}
 	@Override
 	protected String selectAllSql() {

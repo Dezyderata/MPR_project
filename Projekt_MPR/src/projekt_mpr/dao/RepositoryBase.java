@@ -5,12 +5,13 @@ import java.util.ArrayList;
 
 import projekt_mpr.dao.mappers.ResultSetMapper;
 import projekt_mpr.dao.uow.Entity;
+import projekt_mpr.dao.uow.UnitOfWork;
 import projekt_mpr.dao.uow.UnitOfWorkRepository;
 import projekt_mpr.domain.Accessory;
 import projekt_mpr.domain.Flower;
 import projekt_mpr.domain.IHaveId;
 
-public abstract class RepositoryBase<TEntity extends IHaveId> implements Repository<TEntity>{
+public abstract class RepositoryBase<TEntity extends IHaveId> implements Repository<TEntity>, UnitOfWorkRepository{
 
 	Connection connection;
 	protected Statement createTable;
@@ -31,10 +32,11 @@ public abstract class RepositoryBase<TEntity extends IHaveId> implements Reposit
 	protected String createTableSql;
 
 	ResultSetMapper<TEntity> mapper;
-	
-	protected RepositoryBase(Connection connection, ResultSetMapper<TEntity> mapper) throws SQLException {
+	UnitOfWork uow;
+	protected RepositoryBase(Connection connection, ResultSetMapper<TEntity> mapper, UnitOfWork uow) throws SQLException {
 		this.mapper = mapper;
 		this.connection = connection;
+		this.uow = uow;
 		createTable = connection.createStatement();
 		insert = connection.prepareStatement(insertSql());
 		delete = connection.prepareStatement(deleteSql());
@@ -54,25 +56,42 @@ public abstract class RepositoryBase<TEntity extends IHaveId> implements Reposit
 		return result;
 	}
 	public void insert(TEntity entity) {
+		Entity ent = new Entity();
+		ent.setEntity(entity);
+		ent.setRepository(this);
+		uow.markAsNew(ent);
+	}
+	public void persistAdd(Entity entity) {
 		try {
-			parametrizeInsertStatement(entity);
+			parametrizeInsertStatement((TEntity)entity.getEntity());
 			insert.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	public void update(TEntity entity) {
+		Entity ent = new Entity();
+		ent.setEntity(entity);
+		ent.setRepository(this);
+		uow.markAsChanged(ent);
+	}
+	public void persistUpdate(Entity entity) {
 		try {
-			parametrizeUpdateStatement(entity);
+			parametrizeUpdateStatement((TEntity)entity.getEntity());
 			update.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
 	public void delete(TEntity entity) {
+		Entity ent = new Entity();
+		ent.setEntity(entity);
+		ent.setRepository(this);
+		uow.markAsDeleted(ent);
+	}
+	public void persistDelete(Entity entity) {
 		try {
-			delete.setInt(1, entity.getId());
+			delete.setInt(1, ((TEntity)entity.getEntity()).getId());
 			delete.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

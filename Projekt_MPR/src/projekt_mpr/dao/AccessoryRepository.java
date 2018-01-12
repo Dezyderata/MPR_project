@@ -4,13 +4,14 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import projekt_mpr.dao.mappers.ResultSetMapper;
+import projekt_mpr.dao.uow.UnitOfWork;
 import projekt_mpr.domain.Accessory;
 
 
 public class AccessoryRepository extends RepositoryBase<Accessory>{
 	
-	public AccessoryRepository(Connection connection, ResultSetMapper <Accessory> mapper) throws SQLException{
-		super(connection, mapper);
+	public AccessoryRepository(Connection connection, ResultSetMapper <Accessory> mapper, UnitOfWork uow) throws SQLException{
+		super(connection, mapper, uow);
 	}
 	@Override
 	protected String createTableSql() {
@@ -26,7 +27,7 @@ public class AccessoryRepository extends RepositoryBase<Accessory>{
 	}
 	@Override
 	protected String updateSql() {
-		return "UPDATE accessories SET (name, price) = (?,?) WHERE id=?";
+		return "UPDATE accessories SET name=?, price=? WHERE id=?";
 	}
 	@Override
 	protected String deleteSql() {
