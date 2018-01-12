@@ -9,8 +9,8 @@ import projekt_mpr.domain.Accessory;
 
 public class AccessoryRepository extends RepositoryBase<Accessory>{
 	
-	public AccessoryRepository(ResultSetMapper <Accessory> mapper){
-		super(mapper);
+	public AccessoryRepository(Connection connection, ResultSetMapper <Accessory> mapper) throws SQLException{
+		super(connection, mapper);
 	}
 	@Override
 	protected String createTableSql() {

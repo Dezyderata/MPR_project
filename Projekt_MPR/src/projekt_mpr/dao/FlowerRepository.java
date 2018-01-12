@@ -8,8 +8,8 @@ import projekt_mpr.domain.Flower;
 
 public class FlowerRepository extends RepositoryBase<Flower> {
 
-	public FlowerRepository(ResultSetMapper<Flower> mapper) {
-		super(mapper);
+	public FlowerRepository(Connection connection, ResultSetMapper<Flower> mapper) throws SQLException {
+		super(connection, mapper);
 	}
 	@Override
 	protected String createTableSql() {

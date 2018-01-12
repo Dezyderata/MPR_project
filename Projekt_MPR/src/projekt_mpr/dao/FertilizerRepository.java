@@ -8,8 +8,8 @@ import projekt_mpr.domain.Fertilizer;
 
 public class FertilizerRepository extends RepositoryBase<Fertilizer> {
 
-	public FertilizerRepository(ResultSetMapper<Fertilizer> mapper) {
-		super(mapper);
+	public FertilizerRepository(Connection connection, ResultSetMapper<Fertilizer> mapper) throws SQLException {
+		super(connection, mapper);
 	}
 	@Override
 	protected String createTableSql() {

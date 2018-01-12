@@ -8,7 +8,7 @@ import projekt_mpr.domain.Accessory;
 import projekt_mpr.domain.Flower;
 import projekt_mpr.domain.IHaveId;
 
-public abstract class RepositoryBase<TEntity extends IHaveId> {
+public abstract class RepositoryBase<TEntity extends IHaveId> implements Repository<TEntity> {
 
 	Connection connection;
 	protected Statement createTable;
@@ -30,19 +30,14 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 
 	ResultSetMapper<TEntity> mapper;
 	
-	public RepositoryBase(ResultSetMapper<TEntity> mapper) {
+	protected RepositoryBase(Connection connection, ResultSetMapper<TEntity> mapper) throws SQLException {
 		this.mapper = mapper;
-		try {
-			connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost");
-			createTable = connection.createStatement();
-			insert = connection.prepareStatement(insertSql());
-			delete = connection.prepareStatement(deleteSql());
-			update = connection.prepareStatement(updateSql());
-			selectAll = connection.prepareStatement(selectAllSql());
-		} catch (SQLException e) {
-			System.err.println("Something went wrong during connecting datebase!");
-			e.printStackTrace();
-		}
+		this.connection = connection;
+		createTable = connection.createStatement();
+		insert = connection.prepareStatement(insertSql());
+		delete = connection.prepareStatement(deleteSql());
+		update = connection.prepareStatement(updateSql());
+		selectAll = connection.prepareStatement(selectAllSql());
 	}
 	public ArrayList<TEntity> getAll(){
 		ArrayList<TEntity> result = new ArrayList<TEntity>();
@@ -61,7 +56,6 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 			parametrizeInsertStatement(insert, entity);
 			insert.executeUpdate();
 		} catch (SQLException e) {
-			System.err.println("Something went wrong during insert into procedure");
 			e.printStackTrace();
 		}
 	}
@@ -70,7 +64,6 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 			parametrizeUpdateStatement(update, entity);
 			update.executeUpdate();
 		} catch (SQLException e) {
-			System.err.println("Something went wrong during update procedure");
 			e.printStackTrace();
 		}
 	}
@@ -80,7 +73,6 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 			delete.setInt(1, entity.getId());
 			delete.executeUpdate();
 		} catch (SQLException e) {
-			System.err.println("Somtehing went wrong during delete procedure");
 			e.printStackTrace();
 		}
 	}
@@ -98,7 +90,6 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 				createTable.executeUpdate(createTableSql());
 			}
 		} catch (SQLException e) {
-			System.err.println("Something went wrong during create table procedure");
 			e.printStackTrace();
 		}
 	}

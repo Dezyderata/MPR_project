@@ -9,8 +9,8 @@ import projekt_mpr.domain.Customer;
 
 public class CustomerRepository extends RepositoryBase<Customer>{
 
-	public CustomerRepository(ResultSetMapper<Customer> mapper) {
-			super(mapper);
+	public CustomerRepository(Connection connection, ResultSetMapper<Customer> mapper) throws SQLException {
+			super(connection, mapper);
 	}
 	@Override
 	protected String createTableSql() {
