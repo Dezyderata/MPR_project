@@ -3,7 +3,7 @@ package projekt_mpr.domain;
 public class Accessory implements IHaveId {
 	private int id;
 	private String name;
-	private float price;
+	private double price;
 	
 	public int getId() {
 		return id;
@@ -17,10 +17,10 @@ public class Accessory implements IHaveId {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public float getPrice() {
+	public double getPrice() {
 		return price;
 	}
-	public void setPrice(float price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 	

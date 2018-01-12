@@ -4,7 +4,7 @@ public class Flower implements IHaveId{
 	private int id;
 	private String name;
 	private String latinName;
-	private float price;
+	private double price;
 	public int getId() {
 		return id;
 	}
@@ -23,10 +23,10 @@ public class Flower implements IHaveId{
 	public void setLatinName(String latinName) {
 		this.latinName = latinName;
 	}
-	public float getPrice() {
+	public double getPrice() {
 		return price;
 	}
-	public void setPrice(float price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 }

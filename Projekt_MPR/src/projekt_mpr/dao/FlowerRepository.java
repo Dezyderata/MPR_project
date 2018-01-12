@@ -14,9 +14,9 @@ public class FlowerRepository extends RepositoryBase<Flower> {
 	@Override
 	protected String createTableSql() {
 		return "CREATE TABLE flowers("
-				+ "id INT GENERETED BY DEFAULT AS IDENTITY, "
-				+ "name VARECHARE(20), "
-				+ "latinName VARCHARE(40), "
+				+ "id INT PRIMARY KEY AUTO_INCREMENT, "
+				+ "name VARCHAR(20), "
+				+ "latinName VARCHAR(40), "
 				+ "price FLOAT(6,2)"
 				+ ")";
 	}
@@ -41,16 +41,16 @@ public class FlowerRepository extends RepositoryBase<Flower> {
 		return "flowers";
 	}
 	@Override
-	protected void parametrizeUpdateStatement(PreparedStatement statement, Flower flower) throws SQLException {
-		statement.setString(1, flower.getName());
-		statement.setString(2, flower.getLatinName());
-		statement.setFloat(3, flower.getPrice());
-		statement.setInt(4, flower.getId());	
+	protected void parametrizeUpdateStatement(Flower flower) throws SQLException {
+		update.setString(1, flower.getName());
+		update.setString(2, flower.getLatinName());
+		update.setDouble(3, flower.getPrice());
+		update.setInt(4, flower.getId());	
 	}
 	@Override
-	protected void parametrizeInsertStatement(PreparedStatement statement, Flower flower) throws SQLException {
-		statement.setString(1, flower.getName());
-		statement.setString(2, flower.getLatinName());
-		statement.setFloat(3, flower.getPrice());
+	protected void parametrizeInsertStatement(Flower flower) throws SQLException {
+		insert.setString(1, flower.getName());
+		insert.setString(2, flower.getLatinName());
+		insert.setDouble(3, flower.getPrice());
 	}
 }

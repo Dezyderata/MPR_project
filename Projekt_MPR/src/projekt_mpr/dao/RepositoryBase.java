@@ -4,11 +4,13 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import projekt_mpr.dao.mappers.ResultSetMapper;
+import projekt_mpr.dao.uow.Entity;
+import projekt_mpr.dao.uow.UnitOfWorkRepository;
 import projekt_mpr.domain.Accessory;
 import projekt_mpr.domain.Flower;
 import projekt_mpr.domain.IHaveId;
 
-public abstract class RepositoryBase<TEntity extends IHaveId> implements Repository<TEntity> {
+public abstract class RepositoryBase<TEntity extends IHaveId> implements Repository<TEntity>{
 
 	Connection connection;
 	protected Statement createTable;
@@ -23,8 +25,8 @@ public abstract class RepositoryBase<TEntity extends IHaveId> implements Reposit
 	protected abstract String deleteSql();
 	protected abstract String updateSql();
 	protected abstract String selectAllSql();
-	protected abstract void parametrizeUpdateStatement(PreparedStatement statement, TEntity entity) throws SQLException;
-	protected abstract void parametrizeInsertStatement(PreparedStatement statement, TEntity entity) throws SQLException;
+	protected abstract void parametrizeUpdateStatement(TEntity entity) throws SQLException;
+	protected abstract void parametrizeInsertStatement(TEntity entity) throws SQLException;
 	
 	protected String createTableSql;
 
@@ -53,7 +55,7 @@ public abstract class RepositoryBase<TEntity extends IHaveId> implements Reposit
 	}
 	public void insert(TEntity entity) {
 		try {
-			parametrizeInsertStatement(insert, entity);
+			parametrizeInsertStatement(entity);
 			insert.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -61,7 +63,7 @@ public abstract class RepositoryBase<TEntity extends IHaveId> implements Reposit
 	}
 	public void update(TEntity entity) {
 		try {
-			parametrizeUpdateStatement(update, entity);
+			parametrizeUpdateStatement(entity);
 			update.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
