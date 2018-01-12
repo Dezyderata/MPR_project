@@ -3,15 +3,16 @@ package projekt_mpr.dao;
 import java.sql.*;
 import java.util.ArrayList;
 
+import projekt_mpr.dao.mappers.ResultSetMapper;
 import projekt_mpr.domain.Flower;
 
 public class FlowerRepository extends RepositoryBase<Flower> {
 
-	public FlowerRepository() {
-		super();
+	public FlowerRepository(ResultSetMapper<Flower> mapper) {
+		super(mapper);
 	}
 	@Override
-	public String createTableSql() {
+	protected String createTableSql() {
 		return "CREATE TABLE flowers("
 				+ "id INT GENERETED BY DEFAULT AS IDENTITY, "
 				+ "name VARECHARE(20), "
@@ -20,43 +21,24 @@ public class FlowerRepository extends RepositoryBase<Flower> {
 				+ ")";
 	}
 	@Override
-	public String insertSql() {
+	protected String insertSql() {
 		return "INSERT INTO flowers(name, latinName, price) VALUES (?,?,?)";
 	}
 	@Override
-	public String deleteSql() {
+	protected String deleteSql() {
 		return "DELETE FROM flowers WHERE id=?";
 	}
 	@Override
-	public String updateSql() {
+	protected String updateSql() {
 		return "UPDATE flowers SET (name, latinName, price) = (?,?,?) WHERE id=?";
 	}
 	@Override
-	public String selectAllSql() {
+	protected String selectAllSql() {
 		return "SELECT * FROM flowers";
 	}
 	@Override
-	public String tableName() {
+	protected String tableName() {
 		return "flowers";
-	}
-
-	
-	public ArrayList<Flower> selectAll(){
-		ArrayList<Flower> result = new ArrayList<>(); 
-		try {
-			ResultSet rs = selectAll.executeQuery();
-			while(rs.next()) {
-				Flower f = new Flower();
-				f.setId(rs.getInt("id'"));
-				f.setName(rs.getString("name"));
-				f.setLatinName(rs.getString("latinName"));
-				f.setPrice(rs.getFloat("price"));
-				result.add(f);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
 	@Override
 	protected void parametrizeUpdateStatement(PreparedStatement statement, Flower flower) throws SQLException {
@@ -64,13 +46,11 @@ public class FlowerRepository extends RepositoryBase<Flower> {
 		statement.setString(2, flower.getLatinName());
 		statement.setFloat(3, flower.getPrice());
 		statement.setInt(4, flower.getId());	
-		
 	}
 	@Override
 	protected void parametrizeInsertStatement(PreparedStatement statement, Flower flower) throws SQLException {
 		statement.setString(1, flower.getName());
 		statement.setString(2, flower.getLatinName());
 		statement.setFloat(3, flower.getPrice());
-		
 	}
 }

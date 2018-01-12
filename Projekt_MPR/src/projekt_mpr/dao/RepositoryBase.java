@@ -1,7 +1,10 @@
 package projekt_mpr.dao;
 
 import java.sql.*;
+import java.util.ArrayList;
 
+import projekt_mpr.dao.mappers.ResultSetMapper;
+import projekt_mpr.domain.Accessory;
 import projekt_mpr.domain.Flower;
 import projekt_mpr.domain.IHaveId;
 
@@ -24,8 +27,11 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 	protected abstract void parametrizeInsertStatement(PreparedStatement statement, TEntity entity) throws SQLException;
 	
 	protected String createTableSql;
+
+	ResultSetMapper<TEntity> mapper;
 	
-	public RepositoryBase() {
+	public RepositoryBase(ResultSetMapper<TEntity> mapper) {
+		this.mapper = mapper;
 		try {
 			connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost");
 			createTable = connection.createStatement();
@@ -37,6 +43,18 @@ public abstract class RepositoryBase<TEntity extends IHaveId> {
 			System.err.println("Something went wrong during connecting datebase!");
 			e.printStackTrace();
 		}
+	}
+	public ArrayList<TEntity> getAll(){
+		ArrayList<TEntity> result = new ArrayList<TEntity>();
+		try {
+			ResultSet rs = selectAll.executeQuery();
+			while(rs.next()){
+				result.add(mapper.map(rs));
+			}			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	public void insert(TEntity entity) {
 		try {
